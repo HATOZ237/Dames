@@ -9,14 +9,14 @@ class DamierException(Exception):
 class Pion:
 
     def __init__(self, couleur: str, position: list, estDame=False):
-        """[summary]
+        """Classe Pion
 
-        Args:
+        Args:\n
             couleur (str): couleur du pion
             position (list): position du pion
             estDame (bool): pion est dame
 
-        Raises:
+        Raises:\n
             DamierException: couleur fournie invalide
             DamierException: position fournie invalide
             DamierException: position fournie invalide

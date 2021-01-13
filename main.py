@@ -1,3 +1,4 @@
+#import scrapy
 import sys
 import pygame
 import math

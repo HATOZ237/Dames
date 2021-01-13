@@ -5,25 +5,25 @@ from math import sqrt
 class Damier:
 
     def __init__(self, couleur: str, nbrecase: int):
-        """[summary]
+        """Classe Graphique du Damier
 
-        Args:
+        Args:\n
             couleur (str): couleur du joueur
             nbrecase (int): nombre de cases
         """
-        if couleur.lower() == "blanc" or couleur.lower() == "noir":
+        if couleur.lower() == "blanc" or couleur.lower() == "noir":# la couleur doit etre noir ou blanc
             self.couleur = couleur.lower()
         else:
-            raise DamierException("cOULEUR INVALIDE")
-        if nbrecase == 64 or nbrecase == 100:
+            raise DamierException("COULEUR INVALIDE")
+        if nbrecase == 64 or nbrecase == 100: # seuls le mode en 64 cases et 100 cases sont disponibles
             self.nbrecase = nbrecase
             me = int(sqrt(self.nbrecase))
         else:
             raise DamierException("Nombre invalide")
 
-        self.Listerobot = []
-        self.Listejoueur = []
-        self.GrenierRobot = []
+        self.Listerobot = []#liste des pions du joueur adverse ou du robot
+        self.Listejoueur = []# votre liste
+        self.GrenierRobot = []#liste des pions devorés pas 
         self.GrenierJoueur = []
         self.ListeDamier = []
         self.GrenierDamier = []
