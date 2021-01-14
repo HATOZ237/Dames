@@ -49,6 +49,9 @@ class Pion:
     def __str__(self):
         return f"Couleur: {self.couleur}, Est une dame: {self.estDame}, Coordonnées: {self.position}"
 
+    """def __eq__(self, pion):
+        return self.couleur == pion.couleur and self.position == pion.position and self.estDame == pion.estDame"""
+
     """def give_possible_positions(self):
         [summary]
 
@@ -98,6 +101,7 @@ class Pion:
             dictio["SE"] = liste
             if len(dictio) > 0: return dictio
         return liste_possible"""
+
 
 """def position_valide(position: list):
     a, b = position

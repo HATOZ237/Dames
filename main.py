@@ -1,6 +1,5 @@
-#import scrapy
+# import scrapy
 import sys
-import pygame
 import math
 from PyQt5.QtWidgets import *
 from damier import *
@@ -23,10 +22,61 @@ def init_pygame():
             elif event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
                 print("click")
 
-                pos = pygame.mouse.get_pos()
+                pos = list(pygame.mouse.get_pos())
                 pos_case = [pos[0] // 90, pos[1] // 90]
+                ##########################
+                test = damier.can_move(pos_case)
+                print("click1")
+                #print("click3")
+                if damier.pion_is_set and test[0] is not False:
+                    damier.clean()
+                    damier.deplacer_pion(damier.last_pion_set, test[0])
+                    print("click4")
+                    if test[1] is True:
+                        damier.effacer_pion(damier.get_pion([test[2][0]*90, test[2][1]*90]))
+                    damier.change_turn()
+                elif damier.pion_is_set and test[0] is False:
+                    if damier.click_possible(pos):
+                        pion = damier.get_pion(pos)
+                        print("click5")
+                        damier.set_postions(pion)
+                elif damier.pion_is_set is False and damier.click_possible(pos):
+                    pion = damier.get_pion(pos)
+                    print("click6")
+                    damier.set_postions(pion)
+        pygame.display.update()
 
-                if damier.secondClick != True:
+
+# initialisation
+
+app = QApplication([])
+fen = QWidget()
+fen.setWindowTitle("Dames")
+fen.setFixedSize(350, 300)
+vbox = QVBoxLayout()
+hboxa = QHBoxLayout()
+hboxb = QHBoxLayout()
+comboCouleur = QComboBox()
+comboCouleur.addItem("noir")
+comboCouleur.addItem("blanc")
+hboxa.addWidget(QLabel("Choisissez votre couleur: "))
+hboxa.addWidget(comboCouleur)
+comboCases = QComboBox()
+comboCases.addItem("64")
+comboCases.addItem("100")
+comboCases.addItem("144")
+hboxb.addWidget(QLabel("Taille du damier: "))
+hboxb.addWidget(comboCases)
+commencer = QPushButton("commencer")
+commencer.clicked.connect(init_pygame)
+vbox.addLayout(hboxa)
+vbox.addLayout(hboxb)
+vbox.addWidget(commencer)
+fen.setLayout(vbox)
+fen.show()
+app.exec_()
+##############################################################################################
+"""if damier.secondClick != True:
                     if damier.click_possible(pos):
                         pion = damier.get_pion(pos)
 
@@ -85,42 +135,4 @@ def init_pygame():
                             damier.secondClick = False
                         else:
                             damier.change_turn()
-                            damier.secondClick = False
-                    """elif damier.click_possible(pos) and click_pos == False:
-                        print(1)
-                        for p, p1, p2 in damier.give_position(pion1):
-                             pygame.draw.rect(damier.screen, (80, 80, 80), (
-                                p[0] * 90, p[1] * 90, damier.caseSize, damier.caseSize))
-                        for p, p1, p2 in damier.give_position(damier.get_pion(pos)):
-                            pygame.draw.rect(damier.screen, (255, 120, 120), (
-                                p[0] * 90, p[1] * 90, damier.caseSize, damier.caseSize))"""
-        pygame.display.update()
-
-
-# initialisation
-
-app = QApplication([])
-fen = QWidget()
-fen.setWindowTitle("Dames")
-fen.setFixedSize(350, 300)
-vbox = QVBoxLayout()
-hboxa = QHBoxLayout()
-hboxb = QHBoxLayout()
-comboCouleur = QComboBox()
-comboCouleur.addItem("noir")
-comboCouleur.addItem("blanc")
-hboxa.addWidget(QLabel("Choisissez votre couleur: "))
-hboxa.addWidget(comboCouleur)
-comboCases = QComboBox()
-comboCases.addItem("64")
-comboCases.addItem("100")
-hboxb.addWidget(QLabel("Taille du damier: "))
-hboxb.addWidget(comboCases)
-commencer = QPushButton("commencer")
-commencer.clicked.connect(init_pygame)
-vbox.addLayout(hboxa)
-vbox.addLayout(hboxb)
-vbox.addWidget(commencer)
-fen.setLayout(vbox)
-fen.show()
-app.exec_()
+                            damier.secondClick = False"""

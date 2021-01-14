@@ -5,29 +5,34 @@ from math import sqrt
 class Damier:
 
     def __init__(self, couleur: str, nbrecase: int):
-        """Classe Graphique du Damier
+        """Classe Graphique du Damier:\n Il est considéré comme un repere orthonormé dont l'origine est au 
+        au coin superieur gauche(par rapport à vous)
 
         Args:\n
             couleur (str): couleur du joueur
             nbrecase (int): nombre de cases
         """
-        if couleur.lower() == "blanc" or couleur.lower() == "noir":# la couleur doit etre noir ou blanc
+        if couleur.lower() == "blanc" or couleur.lower() == "noir":  # la couleur doit etre noir ou blanc
             self.couleur = couleur.lower()
         else:
             raise DamierException("COULEUR INVALIDE")
-        if nbrecase == 64 or nbrecase == 100: # seuls le mode en 64 cases et 100 cases sont disponibles
+        # seuls le mode en 64 cases et 100 cases sont disponibles
+        if nbrecase == 64 or nbrecase == 100 or nbrecase == 144:
             self.nbrecase = nbrecase
             me = int(sqrt(self.nbrecase))
         else:
             raise DamierException("Nombre invalide")
 
-        self.Listerobot = []#liste des pions du joueur adverse ou du robot
-        self.Listejoueur = []# votre liste
-        self.GrenierRobot = []#liste des pions devorés pas 
-        self.GrenierJoueur = []
-        self.ListeDamier = []
+        self.Listerobot = []  # liste des pions du joueur adverse ou du robot
+        self.Listejoueur = []  # votre liste
+        self.GrenierRobot = []  # liste des pions devorés pas le joueur adverse
+        self.GrenierJoueur = []  # liste des pions devorés par le joueur
+        self.ListeDamier = []  # liste de tous les pions presents sur le damier
         self.GrenierDamier = []
+        # liste des emplacements des cases noirs qui sont les seules considérées
         self.casesOccupable = []
+        self.last_pion_set = None
+        self.pion_is_set = False
 
         for x in range(me):
             for y in range(me):
@@ -110,11 +115,12 @@ class Damier:
         self.turn = 1  # 1 pour le joueur et 2 pour le robot
         self.turnCouleur = self.couleur
         self.secondClick = False
+        self.last_cases_set = []
 
     def deplacer_pion(self, pion: Pion_py, pos: list):
-        """[summary]
+        """Deplace le pion à la position donnée en parametre\n
 
-        Args:
+        Args:\n
             pion (Pion_py): [description]
             pos (list): [description]
         """
@@ -131,7 +137,7 @@ class Damier:
         # affiche le pion
         pion.afficher_pion(pos)
 
-    def effacer_pion(self, pion):
+    def effacer_pion(self, pion: Pion_py):
         """[summary]
 
         Args:
@@ -149,7 +155,7 @@ class Damier:
             self.Listerobot.remove(pion)
         self.ListeDamier.remove(pion)
 
-    def get_pion(self, pos):
+    def get_pion(self, pos: list):
         """[summary]
 
         Args:
@@ -180,7 +186,7 @@ class Damier:
         if pos_case in self.casesOccupable:
             occ = self.occuped_position(pos_case)
             if isinstance(occ, list):
-                if occ[0] and occ[1] == self.turnCouleur:
+                if occ[1] == self.turnCouleur:
                     possible = True
 
         if self.bouffe2:
@@ -353,46 +359,98 @@ class Damier:
                 elif test_ne is True:
                     pass
                 elif test_ne[1] != pion.couleur and test_ner is False:
-                    possible_position.append([[a + 2, b - 2], True, [a + 1, b - 1]])
+                    possible_position.append(
+                        [[a + 2, b - 2], True, [a + 1, b - 1]])
 
                 if test_no is False:
                     possible_position.append([[a - 1, b - 1], False, []])
                 elif test_no is True:
                     pass
                 elif test_no[1] != pion.couleur and test_nor is False:
-                    possible_position.append([[a - 2, b - 2], True, [a - 1, b - 1]])
+                    possible_position.append(
+                        [[a - 2, b - 2], True, [a - 1, b - 1]])
 
                 if isinstance(test_se, list) and test_se[1] != pion.couleur:
                     if test_ser is False:
-                        possible_position.append([[a + 2, b + 2], True, [a + 1, b + 1]])
+                        possible_position.append(
+                            [[a + 2, b + 2], True, [a + 1, b + 1]])
 
                 if isinstance(test_so, list) and test_so[1] != pion.couleur:
                     if test_sor is False:
-                        possible_position.append([[a - 2, b + 2], True, [a - 1, b + 1]])
+                        possible_position.append(
+                            [[a - 2, b + 2], True, [a - 1, b + 1]])
             else:
                 if test_se is False:
                     possible_position.append([[a + 1, b + 1], False, []])
                 elif test_ne is True:
                     pass
                 elif test_se[1] != pion.couleur and test_ser is False:
-                    possible_position.append([[a + 2, b + 2], True, [a + 1, b + 1]])
+                    possible_position.append(
+                        [[a + 2, b + 2], True, [a + 1, b + 1]])
 
                 if test_so is False:
                     possible_position.append([[a - 1, b + 1], False, []])
                 elif test_no is True:
                     pass
                 elif test_so[1] != pion.couleur and test_sor is False:
-                    possible_position.append([[a - 2, b + 2], True, [a - 1, b + 1]])
+                    possible_position.append(
+                        [[a - 2, b + 2], True, [a - 1, b + 1]])
 
                 if isinstance(test_ne, list) and test_ne[1] != pion.couleur:
                     if test_ner is False:
-                        possible_position.append([[a + 2, b - 2], True, [a + 1, b - 1]])
+                        possible_position.append(
+                            [[a + 2, b - 2], True, [a + 1, b - 1]])
 
                 if isinstance(test_no, list) and test_no[1] != pion.couleur:
                     if test_nor is False:
-                        possible_position.append([[a - 2, b - 2], True, [a - 1, b - 1]])
+                        possible_position.append(
+                            [[a - 2, b - 2], True, [a - 1, b - 1]])
 
         return possible_position
+
+    def set_postions(self, pion: Pion_py):
+        """
+        docstring
+        """
+
+        if self.last_pion_set == pion:  # si le pion touché est le meme deux fois de suite, on desactive ses cases
+            for p, p1, p2 in self.last_cases_set:
+                pygame.draw.rect(self.screen, (80, 80, 80), (
+                    p[0] * 90, p[1] * 90, self.caseSize, self.caseSize))
+            self.last_cases_set.clear()  # on reinitialise la liste de derniere position
+            self.pion_is_set = False  # le dernier pion est reinitialisé
+            self.last_pion_set = None
+        else:
+            if self.pion_is_set is False:  # si le pion n'a pas encore ete touché, active ses cases
+                for p, p1, p2 in self.give_position(pion):
+                    pygame.draw.rect(self.screen, (255, 120, 120), (
+                        p[0] * 90, p[1] * 90, self.caseSize, self.caseSize))
+                    self.last_cases_set.append([p, p1, p2])
+                self.pion_is_set = True
+                self.last_pion_set = pion
+            else:  # le pion touché n'est pas le meme que le précedent, on efface les cases du precedent et on met celles du suivant
+                for p, p1, p2 in self.last_cases_set:
+                    pygame.draw.rect(self.screen, (80, 80, 80), (
+                        p[0] * 90, p[1] * 90, self.caseSize, self.caseSize))
+                self.last_cases_set.clear()
+                self.last_pion_set = pion
+                for p, p1, p2 in self.give_position(pion):
+                    pygame.draw.rect(self.screen, (255, 120, 120), (
+                        p[0] * 90, p[1] * 90, self.caseSize, self.caseSize))
+                    self.last_cases_set.append([p, p1, p2])
+
+    def can_move(self, pos: list):
+        for p, p1, p2 in self.last_cases_set:
+            if pos == p:
+                return [p, p1, p2]
+        return [False, False, False]
+
+    def clean(self):
+        for p, p1, p2 in self.last_cases_set:
+            pygame.draw.rect(self.screen, (80, 80, 80), (
+                p[0] * 90, p[1] * 90, self.caseSize, self.caseSize))
+            self.last_cases_set.clear()
+            self.pion_is_set = False
 
 
 """def nord_ouest(pos_pion, pos):
