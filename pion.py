@@ -37,7 +37,7 @@ class Pion:
 
         if isinstance(position, list):
             if isinstance(position[0], int) or isinstance(position[1], int):
-                if position[0] <= 100 and position[0] >= 0 and position[1] <= 100 and position[1] >= 0:
+                if 100 >= position[0] >= 0 and 100 >= position[1] >= 0:
                     self.position = position
                 else:
                     raise DamierException("Position invalide")

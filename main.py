@@ -3,7 +3,14 @@ import sys
 import math
 from PyQt5.QtWidgets import *
 from damier import *
+import pygame
 
+pygame.init()
+pygame.mixer.init()
+music = pygame.mixer.Sound("Super Mario Bros. Soundtrack-mc.mp3")
+mouse = pygame.mixer.Sound("Mouse Click - Free Sound Effect.mp3")
+music.play(0)
+# pygame.mixer.music.play()
 pion = None
 possible_positions = None
 positions_bouffe = []
@@ -11,40 +18,52 @@ pion1 = None
 
 
 def init_pygame():
+    result = True
     fen.close()
     pygame.init()
     damier = Damier(comboCouleur.currentText(), int(comboCases.currentText()))
     pygame.display.flip()
-    while damier.partie_terminee():
+    # pygame.display.update()
+    # print("clicl")
+    # petit = pygame.mixer.Sound("dame.mp3")
+    while result:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
-                print("click")
-
                 pos = list(pygame.mouse.get_pos())
                 pos_case = [pos[0] // 90, pos[1] // 90]
                 ##########################
                 test = damier.can_move(pos_case)
-                print("click1")
-                #print("click3")
+                # print("click1")
+                # print("click3")
                 if damier.pion_is_set and test[0] is not False:
+                    mouse.play(0)
                     damier.clean()
-                    damier.deplacer_pion(damier.last_pion_set, test[0])
-                    print("click4")
+                    pion2 = damier.last_pion_set
+                    damier.deplacer_pion(pion2, test[0])
+                    # print("click4")
                     if test[1] is True:
-                        damier.effacer_pion(damier.get_pion([test[2][0]*90, test[2][1]*90]))
-                    damier.change_turn()
+                        damier.effacer_pion(damier.get_pion([test[2][0] * 90, test[2][1] * 90]))
+                        damier.eat = True
+                        damier.jouer(pion2)
+                    else:
+                        damier.change_turn()
                 elif damier.pion_is_set and test[0] is False:
                     if damier.click_possible(pos):
+                        mouse.play(0)
                         pion = damier.get_pion(pos)
-                        print("click5")
+                        # print("click5")
                         damier.set_postions(pion)
                 elif damier.pion_is_set is False and damier.click_possible(pos):
+                    mouse.play(0)
                     pion = damier.get_pion(pos)
-                    print("click6")
+                    # print("click6")
                     damier.set_postions(pion)
         pygame.display.update()
+        if not damier.partie_terminee():
+            #partie_terminee(False)
+            result = False
 
 
 # initialisation
@@ -75,6 +94,11 @@ vbox.addWidget(commencer)
 fen.setLayout(vbox)
 fen.show()
 app.exec_()
+
+
+##############################################################
+
+
 ##############################################################################################
 """if damier.secondClick != True:
                     if damier.click_possible(pos):

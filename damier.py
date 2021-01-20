@@ -33,6 +33,7 @@ class Damier:
         self.casesOccupable = []
         self.last_pion_set = None
         self.pion_is_set = False
+        self.eat = False
 
         for x in range(me):
             for y in range(me):
@@ -52,7 +53,7 @@ class Damier:
 
         self.screen = pygame.display.set_mode((self.size, self.size))
         self.screen.fill(self.backgroundFen)
-        pygame.display.set_caption("Dames")
+        pygame.display.set_caption("Dames : ")
 
         y = 0
         line = 0
@@ -243,14 +244,30 @@ class Damier:
         else:
             return (False, "")
 
-    def jouer(self):
+    def jouer(self, pion:Pion_py):
         """[summary]
 
         Raises:
             DamierException: [description]
         """
-        if self.partie_terminee()[0]:
-            raise DamierException(" Partie_terminee")
+        liste = []
+        print(self.last_cases_set)
+        if self.eat:
+            for p, p1, p2 in self.give_position(pion):
+                if p1:
+                    liste.append([p, p1, p2])
+            if len(liste)!=0:
+                self.last_cases_set = liste
+                print(self.last_cases_set)
+                self.pion_is_set = True
+                self.last_pion_set = pion
+                for p, p1, p2 in self.last_cases_set:
+                    pygame.draw.rect(self.screen, (255, 120, 120), (
+                        p[0] * 90, p[1] * 90, self.caseSize, self.caseSize))
+            else:
+                self.change_turn()
+            self.eat = False
+
 
     def change_turn(self):
         """
@@ -287,6 +304,7 @@ class Damier:
                                 [[c + 1, d + 1], True, [c, d]])
                         else:
                             result = False
+                    break
             c, d = a, b
             result = True
             while result:
@@ -304,6 +322,8 @@ class Damier:
                                 [[c - 1, d + 1], True, [c, d]])
                         else:
                             result = False
+                    break
+
 
             c, d = a, b
             result = True
@@ -322,24 +342,25 @@ class Damier:
                                 [[c - 1, d - 1], True, [c, d]])
                         else:
                             result = False
-
+                    break
             c, d = a, b
             result = True
             while result:
                 c = c + 1
                 d = d - 1
                 test = self.occuped_position([c, d])
-                if test:
+                if test == True:
                     result = False
-                elif test is False:
+                elif test == False:
                     possible_position.append([[c, d], False, []])
                 else:
                     if test[1] != pion.couleur:
-                        if self.occuped_position([c + 1, d - 1]) is False:
+                        if self.occuped_position([c + 1, d - 1]) == False:
                             possible_position.append(
                                 [[c + 1, d - 1], True, [c, d]])
                         else:
                             result = False
+                    break
         else:
             test_ne = self.occuped_position([a + 1, b - 1])
             test_ner = self.occuped_position([a + 2, b - 2])
@@ -449,8 +470,8 @@ class Damier:
         for p, p1, p2 in self.last_cases_set:
             pygame.draw.rect(self.screen, (80, 80, 80), (
                 p[0] * 90, p[1] * 90, self.caseSize, self.caseSize))
-            self.last_cases_set.clear()
-            self.pion_is_set = False
+        self.last_cases_set.clear()
+        self.pion_is_set = False
 
 
 """def nord_ouest(pos_pion, pos):

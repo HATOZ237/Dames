@@ -1,5 +1,6 @@
 
 from damier import *
+import math
 
 class Damier_py(Damier):
 
