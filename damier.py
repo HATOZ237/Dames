@@ -16,7 +16,7 @@ class Damier:
             self.couleur = couleur.lower()
         else:
             raise DamierException("COULEUR INVALIDE")
-        # seuls le mode en 64 cases et 100 cases sont disponibles
+        # seuls les modes en 64 cases et 100 cases sont disponibles. LE MODE 144 l'est aussi mais depasse les ecrans
         if nbrecase == 64 or nbrecase == 100 or nbrecase == 144:
             self.nbrecase = nbrecase
             me = int(sqrt(self.nbrecase))
@@ -30,10 +30,20 @@ class Damier:
         self.ListeDamier = []  # liste de tous les pions presents sur le damier
         self.GrenierDamier = []
         # liste des emplacements des cases noirs qui sont les seules considérées
-        self.casesOccupable = []
-        self.last_pion_set = None
-        self.pion_is_set = False
-        self.eat = False
+        self.casesOccupable = []### Liste qui contiendra les cases occupables par un pion lorsque de
+        self.last_pion_set = None# variable qui contiendra le pion touché en cas de click valide
+        self.pion_is_set = False##
+        self.eat = False# False si le pion ne peut plus manger de nouveau apres son dernier mangement. True au cas contraire
+        self.caseSize = 90
+        self.size = int(sqrt(self.nbrecase)) * self.caseSize
+        self.backgroundFen = 203, 155, 128  # ne pas modifierè
+        self.screen = pygame.display.set_mode((self.size, self.size))
+        self.screen.fill(self.backgroundFen)
+        ####################### j'ai oublié ##############
+        self.bouffe2 = False
+        self.bouffepion = None
+        ###################### à quoi ça sert ################
+
 
         #on recupere les coordonnées des points noirs
         for x in range(me):
@@ -43,24 +53,14 @@ class Damier:
                 if y % 2 != 0 and x % 2 != 0:
                     self.casesOccupable.append([x, y])
 
-        self.caseSize = 90
 
-        self.size = int(sqrt(self.nbrecase)) * self.caseSize
 
-        self.backgroundFen = 203, 155, 128#ne pas modifier
 
-        #######################j'ai oublié##############
-        self.bouffe2 = False
-        self.bouffepion = None
-        ######################à quoi ça sert################
-
-        self.screen = pygame.display.set_mode((self.size, self.size))
-        self.screen.fill(self.backgroundFen)
         pygame.display.set_caption("Dames : ")
 
         y = 0
         line = 0
-
+################## Pour dessiner les cases du  damier ################
         while y < self.size:
             if line % 2 != 0:
                 x = 90
@@ -72,12 +72,14 @@ class Damier:
                 x = x + (self.caseSize * 2)
             y = y + self.caseSize
             line = line + 1
-
+#############################################################################
+################## Pour creer des pions sur les cases noires.
+        # Le parcours de l'ietration depend de la couleur du joueur principal
+        # et non celui du robot################################
         if self.couleur == "blanc":
-
             for x in range(me):
                 for y in range(me // 2 + 1, me):
-                    if y % 2 == 0 and x % 2 == 0:
+                    if y % 2 == 0 and x % 2 == 0:#si le joueur a choisi le blanc
                         self.Listejoueur.append(
                             Pion_py(self.couleur, [x, y], self.screen))
                     if y % 2 != 0 and x % 2 != 0:
@@ -96,7 +98,7 @@ class Damier:
         elif self.couleur == "noir":
             for x in range(me):
                 for y in range(me // 2 + 1, me):
-                    if y % 2 == 0 and x % 2 == 0:
+                    if y % 2 == 0 and x % 2 == 0:# si le pion est noir
                         self.Listejoueur.append(
                             Pion_py(self.couleur, [x, y], self.screen))
                     if y % 2 != 0 and x % 2 != 0:
@@ -113,12 +115,12 @@ class Damier:
                         self.Listerobot.append(
                             Pion_py("blanc", [x, y], self.screen))
                         self.casesOccupable.append([x, y])
-
-        self.ListeDamier.extend(self.Listejoueur)
-        self.ListeDamier.extend(self.Listerobot)
+#############################################################################################
+        self.ListeDamier.extend(self.Listejoueur)## liste de tous les pions du joueur  et leurs positions ajoutées au damier
+        self.ListeDamier.extend(self.Listerobot)# Liste de tous les pions adverses et leurs positions ajoutées au damier
         self.turn = 1  # 1 pour le joueur et 2 pour le robot
-        self.turnCouleur = self.couleur
-        self.secondClick = False
+        self.turnCouleur = self.couleur## la couleur represente celle de celui qui doit jouer
+        #self.secondClick = False## False si le joueur a fait un premier click sur son pion au moment de son tour e
         self.last_cases_set = []
 
     def deplacer_pion(self, pion: Pion_py, pos: list):
