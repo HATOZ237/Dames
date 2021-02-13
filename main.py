@@ -7,15 +7,17 @@ import pygame
 
 pygame.init()
 pygame.mixer.init()
-music = pygame.mixer.Sound("Super Mario Bros. Soundtrack-mc.mp3")
-mouse = pygame.mixer.Sound("Mouse Click - Free Sound Effect.mp3")
+music = pygame.mixer.Sound("Super Mario Bros. Soundtrack-mc.mp3")  # musique de jeu
+mouse = pygame.mixer.Sound("Mouse Click - Free Sound Effect.mp3")  # musique de clic
 music.play(0)
+choix_sauvegarde = ''
+
 # pygame.mixer.music.play()
-pion = None
+'''pion = None
 possible_positions = None
 positions_bouffe = []
 pion1 = None
-
+'''
 
 def init_pygame():
     result = True
@@ -29,6 +31,7 @@ def init_pygame():
     while result:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
                 pos = list(pygame.mouse.get_pos())
@@ -62,9 +65,17 @@ def init_pygame():
                     damier.set_postions(pion)
         pygame.display.update()
         if not damier.partie_terminee():
-            #partie_terminee(False)
+            # partie_terminee(False)
             result = False
 
+
+
+def depart():
+    app = QApplication([])
+    fen = QWidget()
+    fen.setWindowTitle("!!! QUITER !!!")
+    vbox = QVBoxLayout()
+    hboxa = QHBoxLayout()
 
 # initialisation
 
@@ -75,6 +86,7 @@ fen.setFixedSize(350, 300)
 vbox = QVBoxLayout()
 hboxa = QHBoxLayout()
 hboxb = QHBoxLayout()
+hboxc = QHBoxLayout()
 comboCouleur = QComboBox()
 comboCouleur.addItem("noir")
 comboCouleur.addItem("blanc")
@@ -87,14 +99,19 @@ comboCases.addItem("144")
 hboxb.addWidget(QLabel("Taille du damier: "))
 hboxb.addWidget(comboCases)
 commencer = QPushButton("commencer")
+sortir = QPushButton("Quitter")
 commencer.clicked.connect(init_pygame)
+sortir.clicked.connect(exit)
+hboxc.addWidget(commencer)
+hboxc.addWidget(sortir)
 vbox.addLayout(hboxa)
 vbox.addLayout(hboxb)
-vbox.addWidget(commencer)
+vbox.addLayout(hboxc)
+#vbox.addWidget(commencer)
+#vbox.addWidget(sortir)
 fen.setLayout(vbox)
 fen.show()
 app.exec_()
-
 
 ##############################################################
 

@@ -35,6 +35,7 @@ class Damier:
         self.pion_is_set = False
         self.eat = False
 
+        #on recupere les coordonnées des points noirs
         for x in range(me):
             for y in range(me):
                 if y % 2 == 0 and x % 2 == 0:
@@ -46,10 +47,12 @@ class Damier:
 
         self.size = int(sqrt(self.nbrecase)) * self.caseSize
 
-        self.backgroundFen = 203, 155, 128
+        self.backgroundFen = 203, 155, 128#ne pas modifier
 
+        #######################j'ai oublié##############
         self.bouffe2 = False
         self.bouffepion = None
+        ######################à quoi ça sert################
 
         self.screen = pygame.display.set_mode((self.size, self.size))
         self.screen.fill(self.backgroundFen)
@@ -199,13 +202,15 @@ class Damier:
         return possible
 
     def occuped_position(self, position):
-        """[summary]
+        """Fonction qui informe sur l'occupation d'une case sur le damier \n
 
         Args:
-            position ([type]): [description]
+            position (list): Liste de coordonnées de la forme [x,y] x et y étant compris entre 0 et la racine du nombre de case
 
         Returns:
-            [type]: [description]
+            True si la case n'existe pas ou ne respecte pas les conditions on dit qu'elle est occupée\n
+            False si elle est libre \n
+            [True, couleur] si elle est occupée et couleur étant la couleur du pion qui occupe la case
         """
         a, b = position
         if a > sqrt(self.nbrecase):
@@ -232,20 +237,20 @@ class Damier:
     """"""
 
     def partie_terminee(self):
-        """[summary]
+        """Renseigne sur l'etat de jeu dans la partie
 
         Returns:
-            [type]: [description]
+            tuple: false et "" si la partie n'est pas terminée et true, nom_du_gag
         """
         if len(self.Listerobot) == 0:
-            return (True, "Joueur")
+            return True, "Joueur"
         if len(self.Listejoueur) == 0:
-            return (True, "Robot")
+            return True, "Robot"
         else:
             return (False, "")
 
-    def jouer(self, pion:Pion_py):
-        """[summary]
+    def jouer(self, pion: Pion_py):
+        """Cette fonction permet de redefinir les positions du pion à jouer si celui vient de bouffer
 
         Raises:
             DamierException: [description]
@@ -256,22 +261,21 @@ class Damier:
             for p, p1, p2 in self.give_position(pion):
                 if p1:
                     liste.append([p, p1, p2])
-            if len(liste)!=0:
+            if len(liste) != 0:
                 self.last_cases_set = liste
                 print(self.last_cases_set)
                 self.pion_is_set = True
                 self.last_pion_set = pion
                 for p, p1, p2 in self.last_cases_set:
                     pygame.draw.rect(self.screen, (255, 120, 120), (
-                        p[0] * 90, p[1] * 90, self.caseSize, self.caseSize))
+                        p[0] * 90, p[1] * 90, self.caseSize, self.caseSize))  # colorie la case en rouge
             else:
                 self.change_turn()
             self.eat = False
 
-
     def change_turn(self):
         """
-        docstring
+        Change le tour de la partie
         """
         if self.turnCouleur == "noir":
             self.turnCouleur = "blanc"
@@ -280,9 +284,13 @@ class Damier:
 
     def give_position(self, pion: Pion):
         """
+        donne les positions du pion ou de la dame vers lesquelles ils peuvent aller
+        il s'agit d'une fonction tres complexe mais fonctionnelle
+        Ne pas y toucher à moins d'en faire une copie
+        PS: ça m'a pris 2 jours d'écrire ça
 
         :param pion:
-        :return:
+        :return: Une liste des futures positions possibles d'un pion
         """
         possible_position = []
         a, b = pion.position
@@ -305,25 +313,25 @@ class Damier:
                         else:
                             result = False
                     break
+
             c, d = a, b
             result = True
             while result:
                 c = c - 1
                 d = d + 1
                 test = self.occuped_position([c, d])
-                if test == True:
+                if test == True:  # ne pas modifier
                     result = False
-                elif test == False:
+                elif test == False:  # ne pas modifier
                     possible_position.append([[c, d], False, []])
                 else:
                     if test[1] != pion.couleur:
-                        if self.occuped_position([c - 1, d + 1]) == False:
+                        if self.occuped_position([c - 1, d + 1]) == False:  # ne pas modifier
                             possible_position.append(
                                 [[c - 1, d + 1], True, [c, d]])
                         else:
                             result = False
                     break
-
 
             c, d = a, b
             result = True
@@ -331,7 +339,7 @@ class Damier:
                 c = c - 1
                 d = d - 1
                 test = self.occuped_position([c, d])
-                if test == True:
+                if test == True:#ne pas modifier
                     result = False
                 elif test == False:
                     possible_position.append([[c, d], False, []])
@@ -349,13 +357,13 @@ class Damier:
                 c = c + 1
                 d = d - 1
                 test = self.occuped_position([c, d])
-                if test == True:
+                if test == True:#ne pas modifier
                     result = False
-                elif test == False:
+                elif test == False:#ne pas modifier
                     possible_position.append([[c, d], False, []])
                 else:
                     if test[1] != pion.couleur:
-                        if self.occuped_position([c + 1, d - 1]) == False:
+                        if self.occuped_position([c + 1, d - 1]) == False:#ne pas modifier
                             possible_position.append(
                                 [[c + 1, d - 1], True, [c, d]])
                         else:

@@ -4,6 +4,33 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {
+            "name": "Xdebug for Docker",
+            "type": "php",
+            "request": "launch",
+            "port": 9000,
+            "pathMappings": {
+                "dockerPath": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Launch currently open script",
+            "type": "php",
+            "request": "launch",
+            "program": "",
+            "cwd": "",
+            "port": 9000
+        },
+        {
+            "name": "Xdebug for Docker",
+            "type": "php",
+            "request": "launch",
+            "port": 9000,
+            "pathMappings": {
+                "dockerPath": "${workspaceFolder}"
+            }
+        },
+
     
         {
             "name": "Python : Fichier actuel",
