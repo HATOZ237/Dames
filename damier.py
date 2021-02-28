@@ -149,7 +149,7 @@ class Damier:
         Args:
             pion ([type]): [description]
         """
-        print(pion.position)
+        #print(pion.position)
         pygame.draw.rect(self.screen, (80, 80, 80), (
             pion.position[0] * 90, pion.position[1] * 90, self.caseSize, self.caseSize))
         self.GrenierDamier.append(pion)

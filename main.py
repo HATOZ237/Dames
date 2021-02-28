@@ -4,6 +4,7 @@ import math
 from PyQt5.QtWidgets import *
 from damier import *
 import pygame
+import os
 
 pygame.init()
 pygame.mixer.init()
@@ -31,7 +32,6 @@ def init_pygame():
     while result:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
                 pos = list(pygame.mouse.get_pos())
@@ -71,11 +71,37 @@ def init_pygame():
 
 
 def depart():
-    app = QApplication([])
-    fen = QWidget()
-    fen.setWindowTitle("!!! QUITER !!!")
-    vbox = QVBoxLayout()
-    hboxa = QHBoxLayout()
+    app1 = QApplication([])
+    fen1 = QWidget()
+    print("ou")
+    fen1.setWindowTitle("!!! QUITER !!!")
+    fen1.setFixedSize(500, 300)
+    vbox1 = QVBoxLayout()
+    hboxa1 = QHBoxLayout()
+    hboxa2 = QHBoxLayout()
+    print("ou1")
+    hboxa2.addWidget(QLabel("Voulez vous sauvegarder avant de quitter ?"))
+    accepter = QPushButton("Oui")
+    refuser = QPushButton("Non")
+    print("ou")
+    refuser.clicked.connect(exit)
+    accepter.clicked.connect(save)
+    hboxa1.addWidget(accepter)
+    print("ou")
+    hboxa1.addWidget(refuser)
+    vbox1.addLayout(hboxa1)
+    vbox1.addLayout(hboxa2)
+    fen1.setLayout(vbox1)
+    print("ou")
+    fen1.show()
+    print("ou")
+    os.wait3(100)
+    print("ou3")
+    app1.exec_()
+
+def save():
+    print("Sauvegarde reussie")
+    exit()
 
 # initialisation
 
