@@ -10,15 +10,16 @@ pygame.init()
 pygame.mixer.init()
 music = pygame.mixer.Sound("Super Mario Bros. Soundtrack-mc.mp3")  # musique de jeu
 mouse = pygame.mixer.Sound("Mouse Click - Free Sound Effect.mp3")  # musique de clic
-music.play(0)
+# music.play(0)
 choix_sauvegarde = ''
 
-# pygame.mixer.music.play()
+#pygame.mixer.music.play()
 '''pion = None
 possible_positions = None
 positions_bouffe = []
 pion1 = None
 '''
+
 
 def init_pygame():
     result = True
@@ -52,6 +53,7 @@ def init_pygame():
                         damier.jouer(pion2)
                     else:
                         damier.change_turn()
+                        damier.IA_play()
                 elif damier.pion_is_set and test[0] is False:
                     if damier.click_possible(pos):
                         mouse.play(0)
@@ -67,7 +69,6 @@ def init_pygame():
         if not damier.partie_terminee():
             # partie_terminee(False)
             result = False
-
 
 
 def depart():
@@ -99,9 +100,11 @@ def depart():
     print("ou3")
     app1.exec_()
 
+
 def save():
     print("Sauvegarde reussie")
     exit()
+
 
 # initialisation
 
@@ -133,8 +136,8 @@ hboxc.addWidget(sortir)
 vbox.addLayout(hboxa)
 vbox.addLayout(hboxb)
 vbox.addLayout(hboxc)
-#vbox.addWidget(commencer)
-#vbox.addWidget(sortir)
+# vbox.addWidget(commencer)
+# vbox.addWidget(sortir)
 fen.setLayout(vbox)
 fen.show()
 app.exec_()
@@ -143,63 +146,3 @@ app.exec_()
 
 
 ##############################################################################################
-"""if damier.secondClick != True:
-                    if damier.click_possible(pos):
-                        pion = damier.get_pion(pos)
-
-                        possible_positions = damier.give_position(pion)
-
-                        print(possible_positions)
-                        pion1 = pion
-
-                        if len(possible_positions) > 0:
-                            for possible_pos in possible_positions:
-                                print(possible_pos)
-                                pygame.draw.rect(damier.screen, (255, 120, 120), (
-                                    possible_pos[0][0] * 90, possible_pos[0][1] * 90, damier.caseSize, damier.caseSize))
-                            damier.secondClick = True
-                elif damier.secondClick:
-                    click_pos = False
-                    elim_pion = False
-                    pion_elim = []
-                    for p, p2, p3 in possible_positions:
-                        if p == pos_case:
-                            click_pos = True
-                            elim_pion = p2
-
-                            if elim_pion:
-                                pion_elim = p3
-                            break
-
-                    if click_pos:
-
-                        for possible_pos in possible_positions:
-                            pygame.draw.rect(damier.screen, (80, 80, 80), (
-                                possible_pos[0][0] * 90, possible_pos[0][1] * 90, damier.caseSize, damier.caseSize))
-
-                        damier.deplacer_pion(pion, pos_case)
-
-                        print(pion.position)
-
-                        positions_bouffe = []
-
-                        if elim_pion:
-                            damier.effacer_pion(damier.get_pion(
-                                [pion_elim[0] * 90, pion_elim[1] * 90]))
-
-                            for p, p2, p3 in damier.give_position(pion):
-                                # print(p2)
-                                if p2:
-                                    positions_bouffe.append(p)
-
-                            print(positions_bouffe)
-
-                            if len(positions_bouffe) > 0:
-                                damier.bouffe2 = True
-                                damier.bouffepion = pion
-                            else:
-                                damier.change_turn()
-                            damier.secondClick = False
-                        else:
-                            damier.change_turn()
-                            damier.secondClick = False"""
