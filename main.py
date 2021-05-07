@@ -10,7 +10,7 @@ pygame.init()
 pygame.mixer.init()
 music = pygame.mixer.Sound("Super Mario Bros. Soundtrack-mc.mp3")  # musique de jeu
 mouse = pygame.mixer.Sound("Mouse Click - Free Sound Effect.mp3")  # musique de clic
-# music.play(0)
+music.play(0)
 choix_sauvegarde = ''
 
 #pygame.mixer.music.play()
@@ -66,9 +66,15 @@ def init_pygame():
                     # print("click6")
                     damier.set_postions(pion)
         pygame.display.update()
-        if not damier.partie_terminee():
+        if damier.partie_terminee()[0]:
             # partie_terminee(False)
             result = False
+    print("Partie terminée")
+    if len(damier.Listejoueur) > len(damier.Listerobot):
+        print("Vainqueur: Le Joueur")
+    else:
+        print("Vainqueur : Le Robot")
+    exit()
 
 
 def depart():

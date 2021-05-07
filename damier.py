@@ -3,9 +3,9 @@ from math import sqrt
 from random import choices, shuffle
 
 low = 1
-medium = 3
-high = 5
-max = 7
+medium = 5
+high = 9
+max = 13
 
 
 class Damier:
@@ -151,10 +151,12 @@ class Damier:
     def update(self):
         self.update_moves('blanc')
         self.update_moves('noir')
-        self.update_weights('noir')
-        self.update_weights('blanc')
-        print(self.black_w)
-        print(self.white_w)
+        if self.turnCouleur == "blanc":
+            self.update_weights('blanc')
+            print(self.white_w)
+        else:
+            self.update_weights('noir')
+            print(self.black_w)
 
     def update_weights(self, couleur):
         if couleur == 'noir':
@@ -171,48 +173,48 @@ class Damier:
                 if not est_dame:
                     if self.is_eatable(next_pos, couleur):
                         if not can_eat:
-                            continue
+                            poids = 1
                         else:
-                            poids = poids + 2 * low
+                            poids = poids + 3 * medium
                     else:
                         if not can_eat:
-                            poids = poids + low
+                            poids = poids + 3 * medium
                         else:
-                            poids = poids + 2 * medium
+                            poids = poids + 3 * max
                 else:
                     if self.is_eatable(next_pos, couleur):
                         if not can_eat:
-                            continue
+                            poids = 1
                         else:
                             poids = poids + 2 * high
                     else:
                         if not can_eat:
-                            poids = poids + 2 * medium
+                            poids = poids + 3 * max
                         else:
-                            poids = poids + 2 * max
+                            poids = poids + 6 * max
             else:
                 if not est_dame:
                     if self.is_eatable(next_pos, couleur):
                         if not can_eat:
-                            continue
+                            poids = 1
                         else:
-                            poids = poids + 2 * medium
+                            poids = 1
                     else:
                         if not can_eat:
                             poids = poids + 2 * low
                         else:
-                            poids = poids + 2 * high
+                            poids = poids + 3 * high
                 else:
                     if self.is_eatable(next_pos, couleur):
                         if not can_eat:
-                            continue
+                            poids = 0.1
                         else:
-                            poids = poids + 2 * medium
+                            poids = 1
                     else:
                         if not can_eat:
-                            poids = poids + 2 * high
+                            poids = poids + high
                         else:
-                            poids = poids + 2 * max
+                            poids = poids + 3 * max
             if couleur == 'noir':
                 self.black_w.append(poids)
             else:
@@ -239,12 +241,12 @@ class Damier:
     def is_eatable(self, pos, couleur):
         result = False
         if couleur == "noir":
-            for move in self.move["noir"]:
+            for move in self.move["blanc"]:
                 if move[1][2] == pos:
                     result = True
                     break
         else:
-            for move in self.move["blanc"]:
+            for move in self.move["noir"]:
                 if move[1][2] == pos:
                     result = True
                     break
@@ -621,7 +623,10 @@ class Damier:
                 play = move[1]
                 self.deplacer_pion(move[0], play[0])
                 if play[1]:
+                    test = True
                     self.effacer_pion(self.get_pion([play[2][0] * 90, play[2][1] * 90]))
+                    while test:
+                        test = self.another_play(move[0], "blanc")
                     self.change_turn()
                 else:
                     self.change_turn()
@@ -631,7 +636,30 @@ class Damier:
                 play = move[1]
                 self.deplacer_pion(move[0], play[0])
                 if play[1]:
+                    test = True
                     self.effacer_pion(self.get_pion([play[2][0] * 90, play[2][1] * 90]))
+                    while test:
+                        test = self.another_play(move[0], "noir")
                     self.change_turn()
                 else:
                     self.change_turn()
+
+    def another_play(self, pion1: Pion_py, couleur):
+        self.update()
+        liste = []
+        weight = []
+        for i, moves in enumerate(self.move[couleur]):
+            if pion1 == moves[0] and moves[1][1]:
+                liste.append(moves[1])
+                if couleur == "noir":
+                    weight.append(self.black_w[i])
+                else:
+                    weight.append(self.white_w[i])
+        if liste == []:
+            return False
+        # print(liste)
+        best_play = choices(liste, weights=weight, k=1)
+        play = best_play[0]
+        self.deplacer_pion(pion1, play[0])
+        self.effacer_pion(self.get_pion([play[2][0] * 90, play[2][1] * 90]))
+        return True
